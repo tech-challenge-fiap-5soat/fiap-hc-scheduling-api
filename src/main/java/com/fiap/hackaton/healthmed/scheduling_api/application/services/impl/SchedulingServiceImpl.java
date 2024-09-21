@@ -13,6 +13,7 @@ import com.fiap.hackaton.healthmed.scheduling_api.domain.model.Scheduling;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ public class SchedulingServiceImpl implements SchedulingService {
     @Autowired
     private final JpaDoctorScheduleRepository jpaDoctorScheduleRepository;
 
+    @Transactional
     @Override
     public Scheduling createScheduling(Scheduling scheduling) {
         SchedulingEntity saved = saveScheduling(scheduling);
@@ -49,6 +51,15 @@ public class SchedulingServiceImpl implements SchedulingService {
         if (!isValidSchedule(scheduling)) {
             throw new IllegalArgumentException("Invalid schedule");
         }
+
+        DoctorScheduleEntity doctorSchedule = jpaDoctorScheduleRepository.findById(scheduling.getDoctorScheduleId()).get();
+        if (!isStillAvailable(doctorSchedule)) {
+            throw new IllegalArgumentException("doctor schedule is not available");
+        }
+
+        if(!isFutureSchedule(doctorSchedule)) {
+            throw new IllegalArgumentException("doctor schedule its already past");
+        }
         return jpaSchedulingRepository.save(schedulingEntity);
     }
 
@@ -58,8 +69,17 @@ public class SchedulingServiceImpl implements SchedulingService {
         return jpaDoctorScheduleRepository.save(doctorScheduleEntity);
     }
 
+
+    private Boolean isStillAvailable(DoctorScheduleEntity doctorSchedule) {
+        return doctorSchedule.getStatus().equals(DoctorScheduleStatusEnum.AVAILABLE);
+    }
+
+    private Boolean isFutureSchedule(DoctorScheduleEntity doctorSchedule) {
+        return doctorSchedule.getScheduleStartTime().isAfter(LocalDateTime.now());
+    }
+
     private Boolean isValidSchedule(Scheduling scheduling) {
-        return !scheduling.getSchedulingDate().toLocalDate().isBefore(LocalDate.now()) &&
+        return  !scheduling.getSchedulingDate().toLocalDate().isBefore(LocalDate.now()) &&
                 scheduling.getDoctorId() != null &&
                 scheduling.getDoctorScheduleId() != null &&
                 scheduling.getPatientId() != null;
