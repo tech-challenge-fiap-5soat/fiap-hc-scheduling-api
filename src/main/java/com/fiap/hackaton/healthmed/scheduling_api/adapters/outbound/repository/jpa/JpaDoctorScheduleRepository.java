@@ -15,4 +15,16 @@ public interface JpaDoctorScheduleRepository extends JpaRepository<DoctorSchedul
             DoctorScheduleStatusEnum status,
             LocalDateTime scheduleDate
     );
+    List<DoctorScheduleEntity> findByDoctorIdAndStatusAndScheduleDateAfter(
+            UUID doctorId,
+            DoctorScheduleStatusEnum status,
+            LocalDateTime scheduleDate
+    );
+
+    List<DoctorScheduleEntity> findByDoctorIdAndStatusAndScheduleStartTimeAfter(
+            UUID doctorId,
+            DoctorScheduleStatusEnum status,
+            LocalDateTime scheduleStartTime
+    );
+
 }

@@ -8,4 +8,5 @@ public class PathConstants {
     public static final String SCHEDULES = "/schedules";
     public static final String SCHEDULES_APPOINTMENT = "/appointment";
     public static final String AVAILABLE_SCHEDULES_DOCTORS = "/doctors/{doctorId}/availables";
+    public static final String SCHEDULES_DOCTORS = "/doctors/{doctorId}";
 }

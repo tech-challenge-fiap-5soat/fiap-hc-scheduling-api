@@ -38,7 +38,7 @@ public class SchedulingServiceImpl implements SchedulingService {
 
     @Override
     public List<AvailableDoctorSchedules> getAvailableDoctorSchedules(UUID doctorId, LocalDateTime date) {
-        List<DoctorScheduleEntity> doctorScheduleEntities = jpaDoctorScheduleRepository.findByDoctorIdAndStatusAndScheduleDate(
+        List<DoctorScheduleEntity> doctorScheduleEntities = jpaDoctorScheduleRepository.findByDoctorIdAndStatusAndScheduleStartTimeAfter(
                 doctorId, DoctorScheduleStatusEnum.AVAILABLE, date
         );
         return DoctorScheduleMapper.toAvailableDoctorSchedulesList(doctorScheduleEntities);
@@ -59,7 +59,7 @@ public class SchedulingServiceImpl implements SchedulingService {
     }
 
     private Boolean isValidSchedule(Scheduling scheduling) {
-        return scheduling.getSchedulingDate().isAfter(LocalDateTime.now()) &&
+        return !scheduling.getSchedulingDate().toLocalDate().isBefore(LocalDate.now()) &&
                 scheduling.getDoctorId() != null &&
                 scheduling.getDoctorScheduleId() != null &&
                 scheduling.getPatientId() != null;
