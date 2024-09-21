@@ -29,13 +29,16 @@ public class DoctorScheduleEntity {
     private UUID doctorId;
 
     @Column(name = "schedule_date")
-    private String scheduleDate;
+    @Temporal(TIMESTAMP)
+    private LocalDateTime scheduleDate;
 
     @Column(name = "schedule_start_time")
-    private String scheduleStartTime;
+    @Temporal(TIMESTAMP)
+    private LocalDateTime scheduleStartTime;
 
     @Column(name = "schedule_end_time")
-    private String scheduleEndTime;
+    @Temporal(TIMESTAMP)
+    private LocalDateTime scheduleEndTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
