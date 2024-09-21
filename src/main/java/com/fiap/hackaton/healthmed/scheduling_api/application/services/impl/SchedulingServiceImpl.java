@@ -46,6 +46,9 @@ public class SchedulingServiceImpl implements SchedulingService {
 
     private SchedulingEntity saveScheduling(Scheduling scheduling) {
         SchedulingEntity schedulingEntity = SchedulingMapper.toEntity(scheduling);
+        if (!isValidSchedule(scheduling)) {
+            throw new IllegalArgumentException("Invalid schedule");
+        }
         return jpaSchedulingRepository.save(schedulingEntity);
     }
 
@@ -53,5 +56,12 @@ public class SchedulingServiceImpl implements SchedulingService {
         DoctorScheduleEntity doctorScheduleEntity = jpaDoctorScheduleRepository.findById(scheduling.getDoctorScheduleId()).get();
         doctorScheduleEntity.setStatus(DoctorScheduleStatusEnum.UNAVAILABLE);
         return jpaDoctorScheduleRepository.save(doctorScheduleEntity);
+    }
+
+    private Boolean isValidSchedule(Scheduling scheduling) {
+        return scheduling.getSchedulingDate().isAfter(LocalDateTime.now()) &&
+                scheduling.getDoctorId() != null &&
+                scheduling.getDoctorScheduleId() != null &&
+                scheduling.getPatientId() != null;
     }
 }

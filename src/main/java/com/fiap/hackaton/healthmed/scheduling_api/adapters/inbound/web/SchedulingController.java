@@ -17,7 +17,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(path = PathConstants.SCHEDULES, produces = APPLICATION_JSON_VALUE)
 public interface SchedulingController {
     @PostMapping(path = PathConstants.SCHEDULES_APPOINTMENT, consumes = APPLICATION_JSON_VALUE)
-    ResponseEntity<SchedulingCreatedDto> createScheduleAppointment(@RequestBody CreateSchedulingRequestDto request);
+    ResponseEntity<?> createScheduleAppointment(@RequestBody CreateSchedulingRequestDto request);
 
     @GetMapping(path = PathConstants.AVAILABLE_SCHEDULES_DOCTORS, produces = APPLICATION_JSON_VALUE)
     ResponseEntity<List<AvailableDoctorSchedules>> availableSchedules(@PathVariable("doctorId") UUID doctorId,
