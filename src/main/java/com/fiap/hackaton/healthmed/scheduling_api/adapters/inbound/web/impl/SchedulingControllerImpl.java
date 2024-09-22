@@ -29,7 +29,7 @@ public class SchedulingControllerImpl implements SchedulingController {
     private final CreateDoctorScheduleUseCase createDoctorScheduleUseCase;
 
     @Override
-    public ResponseEntity<?> createScheduleAppointment(CreateSchedulingRequestDto request) {
+    public ResponseEntity<?> createScheduleAppointment(Jwt jwt, CreateSchedulingRequestDto request) {
         try {
             Scheduling scheduling = Scheduling.builder()
                     .patientId(request.patientId())
@@ -59,7 +59,7 @@ public class SchedulingControllerImpl implements SchedulingController {
     }
 
     @Override
-    public ResponseEntity<?> createDoctorSchedules(UUID doctorId, List<CreateDoctorScheduleRequestDto> schedulingRequests) {
+    public ResponseEntity<?> createDoctorSchedules(Jwt jwt, UUID doctorId, List<CreateDoctorScheduleRequestDto> schedulingRequests) {
         try {
             List<DoctorSchedule> schedules = DoctorScheduleMapper.CreateDoctorScheduleRequestDtoListToDoctorScheduleList(schedulingRequests);
             createDoctorScheduleUseCase.createDoctorSchedules(schedules);

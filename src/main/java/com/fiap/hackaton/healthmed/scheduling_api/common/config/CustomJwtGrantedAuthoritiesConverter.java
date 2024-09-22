@@ -18,7 +18,7 @@ public class CustomJwtGrantedAuthoritiesConverter implements Converter<Jwt, Coll
         String userAuthType = jwt.getClaimAsString("custom:UserAuthType");
 
         if (userAuthType != null) {
-            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + userAuthType.toUpperCase());
+            GrantedAuthority authority = new SimpleGrantedAuthority(userAuthType.toUpperCase());
             authorities.add(authority);
         }
         return authorities;

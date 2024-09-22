@@ -18,17 +18,17 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequestMapping(path = PathConstants.SCHEDULES, produces = APPLICATION_JSON_VALUE)
 public interface SchedulingController {
-    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     @PostMapping(path = PathConstants.SCHEDULES_APPOINTMENT, consumes = APPLICATION_JSON_VALUE)
-    ResponseEntity<?> createScheduleAppointment(@RequestBody CreateSchedulingRequestDto request);
+    ResponseEntity<?> createScheduleAppointment(@AuthenticationPrincipal Jwt jwt, @RequestBody CreateSchedulingRequestDto request);
 
-    @PreAuthorize("hasAnyRole('PATIENT', 'DOCTOR')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'DOCTOR')")
     @GetMapping(path = PathConstants.AVAILABLE_SCHEDULES_DOCTORS, produces = APPLICATION_JSON_VALUE)
     ResponseEntity<List<AvailableDoctorSchedules>> availableSchedules(@AuthenticationPrincipal Jwt jwt, @PathVariable("doctorId") UUID doctorId,
                                                                       @RequestBody AvailableDoctorSchedulesRequestDto requestDto);
 
-    @PreAuthorize("hasAnyRole('DOCTOR')")
+    @PreAuthorize("hasAnyAuthority('DOCTOR')")
     @PostMapping(path = PathConstants.SCHEDULES_DOCTORS, consumes = APPLICATION_JSON_VALUE)
-    ResponseEntity<?> createDoctorSchedules(@PathVariable("doctorId") UUID doctorId, @RequestBody List<CreateDoctorScheduleRequestDto> schedulingRequests);
+    ResponseEntity<?> createDoctorSchedules(@AuthenticationPrincipal Jwt jwt, @PathVariable("doctorId") UUID doctorId, @RequestBody List<CreateDoctorScheduleRequestDto> schedulingRequests);
 
 }

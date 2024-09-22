@@ -49,3 +49,9 @@ feign:
       auth-api:
         service:
           url: http://localhost:8099/api
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
