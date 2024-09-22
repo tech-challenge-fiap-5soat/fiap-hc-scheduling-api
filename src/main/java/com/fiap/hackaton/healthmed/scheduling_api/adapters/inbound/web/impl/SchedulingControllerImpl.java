@@ -10,12 +10,14 @@ import com.fiap.hackaton.healthmed.scheduling_api.domain.model.Scheduling;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin
+
 @RestController
 @RequiredArgsConstructor
 public class SchedulingControllerImpl implements SchedulingController {
@@ -49,7 +51,8 @@ public class SchedulingControllerImpl implements SchedulingController {
     }
 
     @Override
-    public ResponseEntity<List<AvailableDoctorSchedules>> availableSchedules(UUID doctorId,
+    public ResponseEntity<List<AvailableDoctorSchedules>> availableSchedules(Jwt jwt,
+                                                                             UUID doctorId,
                                                                              AvailableDoctorSchedulesRequestDto requestDto) {
         List<AvailableDoctorSchedules> availableDoctorSchedules = createSchedulingUseCase.getAvailableDoctorSchedules(doctorId, requestDto.date());
         return ResponseEntity.ok(availableDoctorSchedules);

@@ -24,6 +24,12 @@ spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_y8Kq1GetQ/.well-known/jwks.json
+
 springdoc:
   swagger-ui:
     disable-swagger-default-url: false
