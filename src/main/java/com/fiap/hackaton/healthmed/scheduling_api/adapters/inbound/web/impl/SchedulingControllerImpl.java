@@ -2,6 +2,7 @@ package com.fiap.hackaton.healthmed.scheduling_api.adapters.inbound.web.impl;
 
 import com.fiap.hackaton.healthmed.scheduling_api.adapters.inbound.web.SchedulingController;
 import com.fiap.hackaton.healthmed.scheduling_api.adapters.inbound.web.dto.*;
+import com.fiap.hackaton.healthmed.scheduling_api.adapters.inbound.web.exceptions.SchedulingAppointmentLockedException;
 import com.fiap.hackaton.healthmed.scheduling_api.adapters.outbound.persistence.mapper.DoctorScheduleMapper;
 import com.fiap.hackaton.healthmed.scheduling_api.application.ports.input.useCase.CreateDoctorScheduleUseCase;
 import com.fiap.hackaton.healthmed.scheduling_api.application.ports.input.useCase.CreateSchedulingUseCase;
@@ -9,6 +10,8 @@ import com.fiap.hackaton.healthmed.scheduling_api.domain.model.DoctorSchedule;
 import com.fiap.hackaton.healthmed.scheduling_api.domain.model.Scheduling;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,7 +48,10 @@ public class SchedulingControllerImpl implements SchedulingController {
                     .build();
 
             return ResponseEntity.ok(createdDto);
-        } catch (Exception e) {
+        } catch (SchedulingAppointmentLockedException e){
+            return ResponseEntity.status(HttpStatusCode.valueOf(429))  .body(new ErrorResponseDto(e.getMessage()));
+        }
+        catch (Exception e) {
             return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
         }
     }
