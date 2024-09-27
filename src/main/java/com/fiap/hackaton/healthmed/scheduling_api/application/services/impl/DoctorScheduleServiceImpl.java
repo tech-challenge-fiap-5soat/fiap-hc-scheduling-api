@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class DoctorScheduleServiceImpl implements DoctorScheduleService {
 
-    @Autowired
     private final JpaDoctorScheduleRepository jpaDoctorScheduleRepository;
 
     public void createDoctorSchedule(List<DoctorSchedule> doctorSchedules) {

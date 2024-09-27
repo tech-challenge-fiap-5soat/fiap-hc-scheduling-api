@@ -1,6 +1,7 @@
 package com.fiap.hackaton.healthmed.scheduling_api.application.services.impl;
 
 import com.fiap.hackaton.healthmed.scheduling_api.adapters.inbound.web.dto.AvailableDoctorSchedules;
+import com.fiap.hackaton.healthmed.scheduling_api.adapters.inbound.web.exceptions.BusinessException;
 import com.fiap.hackaton.healthmed.scheduling_api.adapters.inbound.web.exceptions.SchedulingAppointmentLockedException;
 import com.fiap.hackaton.healthmed.scheduling_api.adapters.outbound.persistence.entity.DoctorScheduleEntity;
 import com.fiap.hackaton.healthmed.scheduling_api.adapters.outbound.persistence.entity.DoctorScheduleStatusEnum;
@@ -14,7 +15,6 @@ import com.fiap.hackaton.healthmed.scheduling_api.domain.model.Scheduling;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,14 +28,11 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SchedulingServiceImpl implements SchedulingService {
 
-    @Autowired
     private final JpaSchedulingRepository jpaSchedulingRepository;
 
-    @Autowired
     private final JpaDoctorScheduleRepository jpaDoctorScheduleRepository;
 
-    @Autowired
-    private RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
     @Transactional
     @Override
@@ -58,7 +55,7 @@ public class SchedulingServiceImpl implements SchedulingService {
             if (lock.tryLock(10, 9, TimeUnit.SECONDS)) {
                 try {
                     System.out.println("Sleeping for 6 seconds");
-                    Thread.sleep(6000);
+                    Thread.sleep(3000);
                     System.out.println("Finished sleeping");
 
                     SchedulingEntity saved = saveScheduling(scheduling);
@@ -79,16 +76,16 @@ public class SchedulingServiceImpl implements SchedulingService {
     private SchedulingEntity saveScheduling(Scheduling scheduling) {
         SchedulingEntity schedulingEntity = SchedulingMapper.toEntity(scheduling);
         if (!isValidSchedule(scheduling)) {
-            throw new IllegalArgumentException("Invalid schedule");
+            throw new BusinessException("Invalid schedule");
         }
 
         DoctorScheduleEntity doctorSchedule = jpaDoctorScheduleRepository.findById(scheduling.getDoctorScheduleId()).get();
         if (!isStillAvailable(doctorSchedule)) {
-            throw new IllegalArgumentException("doctor schedule is not available");
+            throw new BusinessException("doctor schedule is not available");
         }
 
         if(!isFutureSchedule(doctorSchedule)) {
-            throw new IllegalArgumentException("doctor schedule its already past");
+            throw new BusinessException("doctor schedule its already past");
         }
         return jpaSchedulingRepository.save(schedulingEntity);
     }
