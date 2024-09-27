@@ -35,3 +35,83 @@ This API was built using [Java](https://www.java.com/) and several tools:
 - [Lombok](https://projectlombok.org/) - Library to reduce boilerplate code
 - [Docker](https://www.docker.com/) - Platform for developing, shipping, and running applications in containers 
 ------
+
+## Endpoints
+
+### 1. Available doctor schedules
+
+**GET** /doctors/{doctorId}/available-schedules
+
+**Response**: `200 OK` with the available schedules
+
+**Response Body**:
+
+```json
+{
+    "availableSchedules": [
+        {
+            "doctorId": 1,
+            "doctorScheduleId": 1,
+            "scheduleDate": "2024-01-01",
+            "scheduleDateStartTime": "09:00",
+            "scheduleDateEndTime": "09:30"
+        },
+        {
+            "doctorId": 1,
+            "doctorScheduleId": 2,
+            "scheduleDate": "2024-01-01",
+            "scheduleDateStartTime": "09:30",
+            "scheduleDateEndTime": "10:00"
+        }
+    ]
+}
+```
+
+### 2. Create a schedule appointment
+
+**POST** /appointments
+
+**Request**
+
+```json
+{
+    "patientId": 1,
+    "doctorId": 1,
+    "doctorScheduleId": 1,
+    "schedulingDate": "2024-01-01T09:00:00"
+}
+```
+
+**Response**: `200 OK` with the id of the created appointment
+
+```json
+{
+    "id": 1
+}
+```
+
+### 3. Create a doctor schedule
+
+**POST** /doctors/{doctorId}
+
+**Request**
+
+```json
+[
+    {
+        "doctorId": 1,
+        "date": "2024-01-01",
+        "startTime": "09:00",
+        "endTime": "09:30"
+    },
+    {
+        "doctorId": 1,
+        "date": "2024-01-01",
+        "startTime": "09:00",
+        "endTime": "09:30"
+    }
+]
+```
+
+**Response**: `200 OK` without body
+
