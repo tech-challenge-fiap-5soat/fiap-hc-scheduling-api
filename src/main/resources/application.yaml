@@ -11,7 +11,7 @@ spring:
   application:
     name: scheduling-api
   datasource:
-    url: jdbc:postgresql://172.23.0.2:5432/scheduleds
+    url: jdbc:postgresql://172.21.0.3:5432/scheduleds
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
@@ -48,13 +48,13 @@ feign:
     config:
       order-api:
         service:
-          url: http://localhost:8078/api/v1
+          url: http://localhost:8098/api/v1
       auth-api:
         service:
           url: http://localhost:8099/api
 
 redis:
-  address: 172.23.0.3:6379
+  address: 172.21.0.1:6379
 
 logging:
   level:
