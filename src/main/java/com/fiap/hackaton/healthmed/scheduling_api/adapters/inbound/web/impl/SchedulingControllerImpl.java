@@ -33,7 +33,6 @@ public class SchedulingControllerImpl implements SchedulingController {
 
     @Override
     public ResponseEntity<?> createScheduleAppointment(Jwt jwt, CreateSchedulingRequestDto request) {
-        try {
             Scheduling scheduling = Scheduling.builder()
                     .patientId(request.patientId())
                     .doctorId(request.doctorId())
@@ -48,12 +47,6 @@ public class SchedulingControllerImpl implements SchedulingController {
                     .build();
 
             return ResponseEntity.ok(createdDto);
-        } catch (SchedulingAppointmentLockedException e){
-            return ResponseEntity.status(HttpStatusCode.valueOf(429))  .body(new ErrorResponseDto(e.getMessage()));
-        }
-        catch (Exception e) {
-            return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
-        }
     }
 
     @Override

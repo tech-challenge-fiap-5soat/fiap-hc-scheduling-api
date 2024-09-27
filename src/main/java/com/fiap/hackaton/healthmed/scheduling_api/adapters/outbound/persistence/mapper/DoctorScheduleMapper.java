@@ -46,9 +46,9 @@ public class DoctorScheduleMapper {
     public static DoctorSchedule createDoctorScheduleRequestDtotoDoctorSchedule(CreateDoctorScheduleRequestDto dto) {
         return DoctorSchedule.builder()
                 .doctorId(dto.doctorId())
-                .scheduleDate(dto.scheduleDate())
-                .scheduleStartTime(dto.scheduleStartTime())
-                .scheduleEndTime(dto.scheduleEndTime())
+                .scheduleDate(dto.date())
+                .scheduleStartTime(dto.startTime())
+                .scheduleEndTime(dto.endTime())
                 .build();
     }
 
