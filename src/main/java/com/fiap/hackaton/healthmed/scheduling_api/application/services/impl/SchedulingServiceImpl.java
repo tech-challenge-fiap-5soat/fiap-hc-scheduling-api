@@ -14,7 +14,6 @@ import com.fiap.hackaton.healthmed.scheduling_api.domain.model.Scheduling;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,14 +27,11 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SchedulingServiceImpl implements SchedulingService {
 
-    @Autowired
     private final JpaSchedulingRepository jpaSchedulingRepository;
 
-    @Autowired
     private final JpaDoctorScheduleRepository jpaDoctorScheduleRepository;
 
-    @Autowired
-    private RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
     @Transactional
     @Override
